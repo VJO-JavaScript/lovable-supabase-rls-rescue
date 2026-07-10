@@ -1,27 +1,40 @@
 # Security Policy
 
-## Intentionally vulnerable baseline
+## Supported state
 
-The cross-tenant document read described in the README is deliberate and uses
-only synthetic data in an ephemeral local database. Please do not file a public
-issue for that known baseline behavior.
+| Revision | Status |
+|---|---|
+| `main` / version 1.x | Supported synthetic reference |
+| `broken-baseline` tag | Intentionally vulnerable; never deploy |
 
-Never point this harness at a real Supabase project, paste credentials into the
-repository, or deploy `0001_broken_baseline.sql`.
+The preserved baseline's cross-tenant document read is deliberate and uses only
+synthetic data in an ephemeral local database. Do not file a vulnerability
+report for that documented historical behavior.
 
-## Reporting an unexpected vulnerability
+Neither revision is a hosted service or drop-in production migration. Never
+point the harness at a real Supabase project, paste credentials into the
+repository, or deploy the vulnerable `0001` migration by itself.
 
-For a security problem other than the documented baseline, use GitHub's private
-vulnerability reporting feature for this repository. Do not include live
-credentials, customer data, access tokens, or exploit data from systems you do
-not own or lack permission to test.
+## Report an unexpected vulnerability privately
 
-Please include:
+Use GitHub's **Security > Report a vulnerability** private reporting flow for
+this repository. Do not open a public issue or public fit-check for a security
+report.
+
+Do not include live credentials, customer/personal data, private repository or
+staging URLs, proprietary code, or exploit data from systems you do not own or
+lack permission to test. Use synthetic values and include:
 
 - the affected file and revision;
-- a minimal reproduction using synthetic data;
-- the expected and observed behavior; and
-- the potential impact.
+- a minimal authorized reproduction;
+- expected and observed behavior; and
+- potential impact.
 
-No production service is operated from this repository, so there is no hosted
-deployment or customer data associated with the demonstration.
+This repository operates no production service and holds no customer data, so
+there is no uptime or emergency-response channel associated with it.
+
+## Public fit checks
+
+The public issue form is for redacted scope questions only. Every issue and
+response is public. Secrets, private URLs, credentials, real user/customer data,
+private source, and unauthorized exploit details are forbidden.

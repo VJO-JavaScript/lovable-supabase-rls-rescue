@@ -1,0 +1,89 @@
+{
+  "run_id": "2026-07-10-hardened-main",
+  "recorded_at": "2026-07-10T03:03:32.6295018-07:00",
+  "base_commit": "1c38ef307128415e50b479e30319df73bedb5d69",
+  "base_tag": "broken-baseline",
+  "working_tree_state": "uncommitted hardened-main changes pending review",
+  "runtime": {
+    "os": "Windows_NT 10.0.26200",
+    "node": "24.16.0",
+    "npm": "11.13.0",
+    "pglite": "0.5.4",
+    "supported_node": ">=20",
+    "ci_node": "20"
+  },
+  "commands": [
+    {
+      "command": "npm ci --registry=https://registry.yarnpkg.com --cache .npm-cache-ci --ignore-scripts --no-audit --no-fund",
+      "exit_code": 0,
+      "result": "added 1 package in 40s",
+      "note": "The local run used a public npm registry mirror after slow local npmjs throughput; package-lock.json retains the canonical npmjs artifact and CI uses npm ci."
+    },
+    {
+      "command": "npm run check",
+      "exit_code": 0,
+      "result": "PROJECT CHECK PASSED version=1.0.0 environment_values=empty"
+    },
+    {
+      "command": "npm test",
+      "exit_code": 0,
+      "result": {
+        "tests": 2,
+        "passed": 2,
+        "failed": 0,
+        "duration_ms": 2056.9471,
+        "baseline_marker": "BROKEN BASELINE CONFIRMED",
+        "rescued_marker": "RESCUE VERIFIED",
+        "cross_tenant_probes_returned": 0
+      }
+    },
+    {
+      "command": "npm run test:baseline",
+      "exit_code": 0,
+      "result": "1 test, 1 passed, 0 failed, 1622.5397 ms"
+    },
+    {
+      "command": "npm run test:rescued",
+      "exit_code": 0,
+      "result": "1 test, 1 passed, 0 failed, 1635.2476 ms"
+    },
+    {
+      "command": "PyYAML safe_load of .github/**/*.yml",
+      "exit_code": 0,
+      "result": "CI workflow and public fit-check issue form parsed"
+    },
+    {
+      "command": "npx --yes markdownlint-cli2@0.17.2 \"**/*.md\" \"#node_modules\"",
+      "exit_code": 0,
+      "result": "8 Markdown files, 0 errors"
+    },
+    {
+      "command": "local Markdown relative-link validation",
+      "exit_code": 0,
+      "result": "all relative Markdown targets exist"
+    }
+  ],
+  "verified_invariants": [
+    "anonymous document reads return zero rows",
+    "Alice sees only the Alpha document after remediation",
+    "Bob sees only the Beta document after remediation",
+    "direct cross-tenant filters return zero rows after remediation",
+    "authorization assertions use anon or authenticated, never service/admin",
+    "package, lockfile, and VERSION agree on 1.0.0",
+    ".env.example contains names only"
+  ],
+  "artifacts": [
+    "docs/audit/baseline-findings.md",
+    "docs/audit/remediation-ledger.md",
+    "docs/operations/rollback-runbook.md",
+    "docs/operations/residual-risks.md",
+    "db/migrations/0002_enforce_tenant_membership.sql",
+    "test/rescued-tenant-isolation.test.js"
+  ],
+  "not_run": [
+    "hosted Supabase staging verification",
+    "production deployment or migration",
+    "write-policy or privileged-path testing",
+    "external penetration test"
+  ]
+}

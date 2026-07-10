@@ -1,12 +1,14 @@
 {
   "name": "lovable-supabase-rls-rescue",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "A synthetic, reproducible Supabase-style RLS tenant-isolation failure for launch-rescue evidence.",
   "type": "module",
   "scripts": {
+    "check": "node --check src/baseline-database.js && node --check src/rescued-database.js && node --check test/broken-baseline.test.js && node --check test/rescued-tenant-isolation.test.js && node --check scripts/check-project.js && node scripts/check-project.js",
     "test": "node --test --test-reporter=spec",
-    "test:baseline": "node --test --test-reporter=spec test/broken-baseline.test.js"
+    "test:baseline": "node --test --test-reporter=spec test/broken-baseline.test.js",
+    "test:rescued": "node --test --test-reporter=spec test/rescued-tenant-isolation.test.js"
   },
   "engines": {
     "node": ">=20"

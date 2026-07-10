@@ -1,0 +1,89 @@
+name: Public rescue fit check
+description: Check whether a redacted Lovable/Supabase RLS blocker resembles this reference.
+title: "[Public fit check]: "
+labels: []
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## This issue and every response are public
+
+        Share only redacted, non-sensitive facts. **Do not include secrets, tokens, credentials, private repository/staging URLs, customer or personal data, proprietary code, database contents, or exploit instructions for any system you do not own or lack permission to test.**
+
+        This form is for initial scope fit, not security disclosure or emergency response. Report unexpected vulnerabilities through the private process in `SECURITY.md`.
+
+  - type: checkboxes
+    id: public-safety
+    attributes:
+      label: Public-information confirmation
+      options:
+        - label: I understand this issue is public and will not include secrets, private URLs, private code, customer data, personal data, or credentials.
+          required: true
+        - label: I own the system or am explicitly authorized to request work on it.
+          required: true
+
+  - type: dropdown
+    id: builder
+    attributes:
+      label: Primary application stack
+      description: Choose the closest public description.
+      options:
+        - Lovable + Supabase
+        - Other builder + Supabase
+        - React/Next.js + Supabase
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Current stage
+      options:
+        - Pre-launch with a reproducible blocker
+        - Pilot or staging
+        - Live with a non-emergency blocker
+        - Planning only
+    validations:
+      required: true
+
+  - type: dropdown
+    id: blocker
+    attributes:
+      label: Redacted blocker category
+      options:
+        - Cross-tenant read or RLS isolation
+        - Authentication or role behavior
+        - Migration or launch readiness
+        - Billing or entitlement authorization
+        - Unknown production blocker
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Sanitized reproduction
+      description: Describe roles, expected behavior, and observed behavior using fictional names and values only.
+      placeholder: "Synthetic example: Tenant A user can list one Tenant B record; expected zero. No real IDs, URLs, code, or data included."
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Sanitized acceptance condition
+      description: State the smallest observable result that would close the blocker.
+      placeholder: "Tenant A test user sees only Tenant A rows, and a direct Tenant B ID probe returns zero rows."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Initial scope acknowledgement
+      options:
+        - label: I understand an initial fit check is not a security audit, production authorization, incident response, or guarantee of engagement.
+          required: true

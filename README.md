@@ -1,79 +1,134 @@
-# Lovable + Supabase RLS Rescue Proof
+# Lovable + Supabase RLS Rescue
 
-> [!CAUTION]
-> This repository's baseline is **intentionally vulnerable**. It exists to
-> reproduce a cross-tenant data leak with synthetic data. Do not deploy this
-> migration, copy its policy into an application, or connect this harness to a
-> real Supabase project.
+[![CI](https://github.com/VJO-JavaScript/lovable-supabase-rls-rescue/actions/workflows/ci.yml/badge.svg)](https://github.com/VJO-JavaScript/lovable-supabase-rls-rescue/actions/workflows/ci.yml)
 
-This small evidence repository models a common launch blocker in AI-built SaaS
-applications: a Row Level Security (RLS) policy confirms that a user is logged
-in but never confirms that the user belongs to the row's tenant.
+An executable before/after proof for a multi-tenant Supabase Row Level Security
+(RLS) failure: an authenticated Alpha Company user could read Beta Company's
+private document; the hardened policy limits each user to their own tenant.
 
-The baseline test proves the failure before any remediation is attempted:
+> [!IMPORTANT]
+> **Reference-work disclosure:** this is synthetic portfolio/reference work,
+> built to demonstrate a reproducible rescue method. It is not client work, a
+> production incident, a penetration test, or evidence that any real Lovable or
+> Supabase application was exposed.
 
-- an `anon` request reads no documents;
-- authenticated Alice has membership in Alpha Company only;
-- Alice can correctly read Alpha Company's document; and
-- Alice can **incorrectly read Beta Company's document**.
+- [Inspect the preserved vulnerable baseline](https://github.com/VJO-JavaScript/lovable-supabase-rls-rescue/tree/broken-baseline)
+- [Inspect the hardened main branch](https://github.com/VJO-JavaScript/lovable-supabase-rls-rescue/tree/main)
+- [Review the finding](docs/audit/baseline-findings.md)
+- [Review the remediation ledger](docs/audit/remediation-ledger.md)
+- [Review rollback and residual risk](docs/operations/rollback-runbook.md)
 
-Everything runs locally in an ephemeral PGlite database. All identities,
-organizations, and documents are synthetic and deterministic.
+## Verified outcome
 
-## Run the reproduction
+| Request context | Broken baseline | Hardened main |
+|---|---:|---:|
+| Anonymous visitor | 0 documents | 0 documents |
+| Alice, Alpha member | Alpha + **Beta** | Alpha only |
+| Bob, Beta member | Alpha + **Beta** | Beta only |
+| Direct cross-tenant ID probe | Leaks row | Returns 0 rows |
 
-Requirements: Node.js 20 or newer.
+The baseline and remediation run in separate ephemeral databases. Passing the
+baseline test means the historical vulnerability was successfully reproduced;
+it does not mean that policy is safe.
+
+## Run the evidence
+
+Requirements: Node.js 20 or newer. No Docker, environment variables, hosted
+database, Supabase account, or production credentials are required.
 
 ```bash
-npm install
+npm ci
+npm run check
 npm test
 ```
 
-The successful test output includes `BROKEN BASELINE CONFIRMED`. Here,
-"successful" means that the test deterministically observed the intended
-security failure. It does **not** mean the policy is safe.
+Expected evidence markers:
 
-No environment variables, Docker daemon, hosted database, or Supabase account
-are required. `.env.example` contains names only for a possible future hosted
-staging adapter; this baseline never reads them.
+```text
+BROKEN BASELINE CONFIRMED ... observedUnauthorizedTenant:"22222222-..."
+RESCUE VERIFIED ... crossTenantProbesReturned:0
+tests 2 | pass 2 | fail 0
+```
 
-## Why the policy is broken
+Run either side independently:
 
-The intentionally vulnerable policy in
-[`db/migrations/0001_broken_baseline.sql`](db/migrations/0001_broken_baseline.sql)
-is equivalent to:
+```bash
+npm run test:baseline
+npm run test:rescued
+```
+
+## Root cause and remediation
+
+The unsafe policy in `0001_broken_baseline.sql` checks only whether the request
+has an authenticated identity:
 
 ```sql
 using (auth.uid() is not null)
 ```
 
-That expression distinguishes authenticated users from anonymous users, but it
-authorizes every authenticated user to read every tenant's row. Authentication
-is not tenant authorization.
+Authentication is not tenant authorization. The separate, atomic `0002`
+migration removes that policy and requires a membership matching both the
+request identity and the document's organization:
 
-## What this harness models
+```sql
+using (
+  exists (
+    select 1
+    from public.organization_memberships as membership
+    where membership.organization_id = documents.organization_id
+      and membership.user_id = auth.uid()
+  )
+)
+```
 
-- PostgreSQL roles named `anon` and `authenticated`.
-- A Supabase-style `auth.uid()` derived from the request JWT subject setting.
-- Two organizations, two users, one membership per user, and one private
-  document per organization.
-- PostgreSQL RLS evaluated while queries execute as the request role.
+The fixture bootstrap runs as the local database owner. Every access-control
+assertion runs as `anon` or `authenticated` with a transaction-local JWT
+subject. No service/admin role is used to make an authorization assertion.
 
-PGlite exercises real PostgreSQL policy behavior, but this is not a complete
-Supabase emulator. It does not test the hosted Auth service, JWT verification,
-PostgREST's HTTP layer, network configuration, or a production migration path.
-Those boundaries are intentionally stated so the evidence is not oversold.
+## Evidence map
 
-## Evidence and safety
+- [`0001_broken_baseline.sql`](db/migrations/0001_broken_baseline.sql)
+  Synthetic vulnerable schema and fixtures.
+- [`0002_enforce_tenant_membership.sql`](db/migrations/0002_enforce_tenant_membership.sql)
+  Minimal forward remediation.
+- [`broken-baseline.test.js`](test/broken-baseline.test.js)
+  Deterministic failure reproduction.
+- [`rescued-tenant-isolation.test.js`](test/rescued-tenant-isolation.test.js)
+  Two-sided tenant regression coverage.
+- [`remediation-ledger.md`](docs/audit/remediation-ledger.md)
+  Finding-to-control traceability.
+- [`rollback-runbook.md`](docs/operations/rollback-runbook.md)
+  Fail-closed recovery procedure.
+- [`residual-risks.md`](docs/operations/residual-risks.md)
+  Explicit limits and next tests.
+- [`manifest.json`](runs/2026-07-10-hardened-main/manifest.json)
+  Verified run record.
 
-- [Baseline evidence](docs/broken-baseline-evidence.md)
-- [Security policy](SECURITY.md)
-- [Synthetic migration](db/migrations/0001_broken_baseline.sql)
-- [Deterministic test](test/broken-baseline.test.js)
+## Scope boundaries
 
-The vulnerable state should be preserved in a `broken-baseline` Git tag for
-comparison with a separately reviewed remediation. The vulnerable baseline
-must never be deployed.
+PGlite exercises PostgreSQL roles and RLS, but this repository is not a complete
+Supabase emulator. It does not validate hosted Auth/JWT verification, PostgREST,
+Realtime, Storage, Edge Functions, production migrations, or write policies.
+See [residual risks](docs/operations/residual-risks.md) before adapting the
+pattern.
+
+Never deploy the vulnerable migration, connect this harness to client data, or
+treat a passing local test as production authorization. A real rescue should
+reproduce the problem in an authorized non-production environment, define the
+acceptance test, preserve a recovery path, and reverify the hosted boundary.
+
+## Is this pattern relevant to your blocker?
+
+This reference is closest to a Lovable/Supabase application that already has a
+reproducible multi-tenant read leak or an RLS launch blocker. You can open a
+[public fit-check issue](https://github.com/VJO-JavaScript/lovable-supabase-rls-rescue/issues/new?template=fit-check.yml)
+using only redacted, non-sensitive facts.
+
+**GitHub issues are public. Never include secrets, tokens, private repository or
+staging URLs, customer data, personal data, proprietary code, or exploit steps
+against a system you do not own or lack authorization to test.** Security
+reports belong in GitHub's private vulnerability reporting flow described in
+[SECURITY.md](SECURITY.md).
 
 ## License
 
