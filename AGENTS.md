@@ -21,6 +21,7 @@ code, credentials, or real data.
 npm ci
 npm run check
 npm test
+npm run demo
 npm run test:baseline
 npm run test:rescued
 ```
@@ -53,6 +54,9 @@ None. This is a local and CI evidence harness, not an application deployment.
 - anonymous access returns zero documents before and after remediation
 - rescued Alice sees Alpha only and direct Beta probes return zero rows
 - rescued Bob sees Beta only and direct Alpha probes return zero rows
+- authenticated writes remain inside the caller's tenant
+- update `WITH CHECK` prevents moving a visible row into another tenant
+- anonymous callers have no document write privilege
 - no service/admin role is used in an authorization assertion
 - public docs disclose synthetic reference work and residual risk
 - no secrets or real personal/customer data are present

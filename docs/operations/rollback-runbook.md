@@ -39,7 +39,7 @@ be adapted and reviewed for the target environment:
 begin;
 drop policy if exists "authenticated_members_read_tenant_documents"
   on public.documents;
-revoke select on public.documents from authenticated;
+revoke select, insert, update, delete on public.documents from authenticated;
 commit;
 ```
 
@@ -54,7 +54,8 @@ must be assessed separately.
 3. Verify anonymous access returns zero rows.
 4. Verify Alice can read Alpha and cannot read Beta by list and direct-ID probes.
 5. Verify Bob can read Beta and cannot read Alpha by list and direct-ID probes.
-6. Test every relevant write operation and privileged integration in staging.
+6. Verify same-tenant document writes work, cross-tenant writes affect zero
+   rows or fail closed, and tenant moves are denied.
 7. Monitor authorization failures and unexpected row counts after release.
 
 ## Stop conditions

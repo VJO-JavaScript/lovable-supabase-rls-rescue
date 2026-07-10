@@ -1,13 +1,14 @@
 # Residual Risks and Explicit Limits
 
-Version 1.0.0 remediates one synthetic authenticated `SELECT` leak. It is not a
+Version 1.1.0 remediates one synthetic authenticated `SELECT` leak and verifies
+tenant-scoped document `INSERT`, `UPDATE`, and `DELETE` policies. It is not a
 complete authorization review or a production certification.
 
 ## Not covered by this proof
 
 - Hosted Supabase Auth, JWT signature/claim validation, and session refresh.
 - PostgREST routing, exposed schemas, views, RPC functions, or API caching.
-- `INSERT`, `UPDATE`, `DELETE`, `UPSERT`, bulk import, and ownership transfer.
+- `UPSERT`, bulk import, ownership transfer, and write paths on other tables.
 - Realtime subscriptions, Storage policies, Edge Functions, and webhooks.
 - Service-role, database-owner, `BYPASSRLS`, or `SECURITY DEFINER` paths.
 - Membership invitation, removal, role change, race, and stale-token behavior.
@@ -20,9 +21,9 @@ complete authorization review or a production certification.
 ## PGlite boundary
 
 PGlite exercises PostgreSQL roles, request settings, subqueries, transactions,
-and RLS policies. It does not reproduce every hosted Supabase component or
-configuration. A production adaptation must rerun equivalent role-accurate
-tests against an authorized, non-production Supabase environment.
+and RLS read/write policies. It does not reproduce every hosted Supabase
+component or configuration. A production adaptation must rerun equivalent
+role-accurate tests against an authorized, non-production Supabase environment.
 
 ## Required next tests for a real application
 

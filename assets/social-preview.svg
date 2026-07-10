@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title description">
+  <title id="title">Lovable and Supabase RLS Rescue</title>
+  <desc id="description">A before-and-after security diagram showing a cross-tenant read in the baseline and isolated reads and writes in the hardened implementation.</desc>
+
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071827"/>
+      <stop offset="1" stop-color="#0A2234"/>
+    </linearGradient>
+    <linearGradient id="safeCard" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0C2A36"/>
+      <stop offset="1" stop-color="#0A2530"/>
+    </linearGradient>
+    <marker id="redArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#FB7185"/>
+    </marker>
+    <marker id="greenArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#34D399"/>
+    </marker>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#background)"/>
+  <circle cx="1160" cy="30" r="260" fill="#14B8A6" opacity="0.06"/>
+  <circle cx="70" cy="610" r="220" fill="#2DD4BF" opacity="0.04"/>
+
+  <g transform="translate(62 38)">
+    <path d="M54 4 104 23v40c0 34-20 61-50 74C24 124 4 97 4 63V23L54 4Z" fill="#0B2A3A" stroke="#2DD4BF" stroke-width="9" stroke-linejoin="round"/>
+    <path d="M27 43v42c0 7 12 13 27 13s27-6 27-13V43H27Z" fill="#0F766E"/>
+    <ellipse cx="54" cy="43" rx="27" ry="10" fill="#2DD4BF"/>
+    <path d="M27 63c0 7 12 13 27 13s27-6 27-13" fill="none" stroke="#5EEAD4" stroke-width="5"/>
+    <path d="m54 36 22 55H64l-4-12H48l-4 12H32l22-55Zm-3 34h6l-3-9-3 9Z" fill="#FFFFFF" fill-rule="evenodd"/>
+  </g>
+
+  <text x="190" y="95" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="53" font-weight="800" letter-spacing="-1.5">Lovable + Supabase RLS Rescue</text>
+  <text x="192" y="133" fill="#9CC4CC" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="600">Reproducible tenant-isolation failure → tested remediation</text>
+
+  <g>
+    <rect x="64" y="178" width="548" height="348" rx="25" fill="#102332" stroke="#FB7185" stroke-width="3"/>
+    <rect x="64" y="178" width="548" height="70" rx="25" fill="#FB7185" opacity="0.09"/>
+    <path d="M64 223V203c0-14 11-25 25-25h498c14 0 25 11 25 25v20H64Z" fill="#FB7185" opacity="0.03"/>
+    <circle cx="102" cy="214" r="15" fill="#FB7185"/>
+    <path d="m95 207 14 14m0-14-14 14" stroke="#071827" stroke-width="4" stroke-linecap="round"/>
+    <text x="130" y="225" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="750">Baseline: cross-tenant read</text>
+
+    <rect x="96" y="281" width="177" height="203" rx="20" fill="#0A1C2A" stroke="#315064" stroke-width="2"/>
+    <circle cx="184" cy="333" r="26" fill="#1A3A4C" stroke="#7DD3FC" stroke-width="3"/>
+    <circle cx="184" cy="326" r="8" fill="#BAE6FD"/>
+    <path d="M168 346c4-12 28-12 32 0" fill="#BAE6FD"/>
+    <text x="184" y="389" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700">Alice</text>
+    <text x="184" y="421" text-anchor="middle" fill="#8FB6C4" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="600">TENANT ALPHA</text>
+
+    <rect x="403" y="281" width="177" height="203" rx="20" fill="#0A1C2A" stroke="#FB7185" stroke-width="2" stroke-dasharray="8 7"/>
+    <path d="M449 321v62c0 10 20 18 43 18s43-8 43-18v-62h-86Z" fill="#9F3249"/>
+    <ellipse cx="492" cy="321" rx="43" ry="16" fill="#FB7185"/>
+    <path d="M449 351c0 10 20 18 43 18s43-8 43-18" fill="none" stroke="#FDA4AF" stroke-width="6"/>
+    <text x="492" y="433" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="700">Beta data</text>
+    <text x="492" y="460" text-anchor="middle" fill="#FB7185" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">WRONG TENANT</text>
+
+    <path d="M226 351C299 315 357 315 438 351" fill="none" stroke="#FB7185" stroke-width="7" stroke-linecap="round" stroke-dasharray="13 10" marker-end="url(#redArrow)"/>
+    <rect x="267" y="293" width="147" height="38" rx="19" fill="#421B2B" stroke="#FB7185" stroke-width="2"/>
+    <text x="340" y="319" text-anchor="middle" fill="#FDA4AF" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700">unauthorized</text>
+  </g>
+
+  <g>
+    <rect x="668" y="178" width="548" height="348" rx="25" fill="url(#safeCard)" stroke="#34D399" stroke-width="3"/>
+    <rect x="668" y="178" width="548" height="70" rx="25" fill="#34D399" opacity="0.09"/>
+    <path d="M668 223V203c0-14 11-25 25-25h498c14 0 25 11 25 25v20H668Z" fill="#34D399" opacity="0.03"/>
+    <circle cx="706" cy="214" r="15" fill="#34D399"/>
+    <path d="m698 214 6 6 11-13" fill="none" stroke="#071827" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="734" y="225" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="750">Hardened: isolated reads + writes</text>
+
+    <rect x="700" y="281" width="218" height="203" rx="20" fill="#091E29" stroke="#2A6470" stroke-width="2"/>
+    <circle cx="750" cy="330" r="22" fill="#174B54" stroke="#67E8F9" stroke-width="3"/>
+    <circle cx="750" cy="324" r="7" fill="#CFFAFE"/>
+    <path d="M736 342c4-10 24-10 28 0" fill="#CFFAFE"/>
+    <path d="M820 313v52c0 9 17 16 37 16s37-7 37-16v-52h-74Z" fill="#0F766E"/>
+    <ellipse cx="857" cy="313" rx="37" ry="14" fill="#2DD4BF"/>
+    <path d="M820 340c0 9 17 16 37 16s37-7 37-16" fill="none" stroke="#5EEAD4" stroke-width="5"/>
+    <path d="M781 332h28" stroke="#34D399" stroke-width="6" stroke-linecap="round" marker-start="url(#greenArrow)" marker-end="url(#greenArrow)"/>
+    <text x="809" y="421" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="700">Alice ↔ Alpha</text>
+    <text x="809" y="454" text-anchor="middle" fill="#6EE7B7" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700">READ + WRITE</text>
+
+    <rect x="966" y="281" width="218" height="203" rx="20" fill="#091E29" stroke="#2A6470" stroke-width="2"/>
+    <circle cx="1016" cy="330" r="22" fill="#174B54" stroke="#67E8F9" stroke-width="3"/>
+    <circle cx="1016" cy="324" r="7" fill="#CFFAFE"/>
+    <path d="M1002 342c4-10 24-10 28 0" fill="#CFFAFE"/>
+    <path d="M1086 313v52c0 9 17 16 37 16s37-7 37-16v-52h-74Z" fill="#0F766E"/>
+    <ellipse cx="1123" cy="313" rx="37" ry="14" fill="#2DD4BF"/>
+    <path d="M1086 340c0 9 17 16 37 16s37-7 37-16" fill="none" stroke="#5EEAD4" stroke-width="5"/>
+    <path d="M1047 332h28" stroke="#34D399" stroke-width="6" stroke-linecap="round" marker-start="url(#greenArrow)" marker-end="url(#greenArrow)"/>
+    <text x="1075" y="421" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="700">Bob ↔ Beta</text>
+    <text x="1075" y="454" text-anchor="middle" fill="#6EE7B7" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700">READ + WRITE</text>
+
+    <path d="M942 289v154" stroke="#34D399" stroke-width="4" stroke-dasharray="8 9" opacity="0.65"/>
+    <path d="M942 357 963 365v17c0 14-8 25-21 31-13-6-21-17-21-31v-17l21-8Z" fill="#0B2A3A" stroke="#34D399" stroke-width="4" stroke-linejoin="round"/>
+    <path d="m933 382 7 7 13-16" fill="none" stroke="#A7F3D0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <text x="640" y="595" text-anchor="middle" fill="#B6D2D8" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="650" letter-spacing="0.3">Role-accurate tests · CI · rollback evidence</text>
+</svg>

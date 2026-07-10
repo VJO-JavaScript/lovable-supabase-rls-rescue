@@ -1,0 +1,59 @@
+{
+  "run_id": "2026-07-10-v1.1.0",
+  "version": "1.1.0",
+  "runtime": {
+    "node": "24.16.0",
+    "npm": "11.13.0",
+    "pglite": "0.5.4",
+    "supported_node": ">=20",
+    "ci_node": "20"
+  },
+  "commands": [
+    {
+      "command": "npm ci",
+      "exit_code": 0,
+      "result": "1 package installed; 0 vulnerabilities"
+    },
+    {
+      "command": "npm run check",
+      "exit_code": 0,
+      "result": "PROJECT CHECK PASSED version=1.1.0 environment_values=empty"
+    },
+    {
+      "command": "npm test",
+      "exit_code": 0,
+      "result": {
+        "tests": 3,
+        "passed": 3,
+        "failed": 0,
+        "baseline_marker": "BROKEN BASELINE CONFIRMED",
+        "read_marker": "RESCUE VERIFIED",
+        "write_marker": "WRITE MATRIX VERIFIED",
+        "cross_tenant_read_rows": 0,
+        "cross_tenant_update_rows": 0,
+        "cross_tenant_delete_rows": 0,
+        "tenant_move": "denied"
+      }
+    },
+    {
+      "command": "npm run demo",
+      "exit_code": 0,
+      "result": "DEMO COMPLETE: baseline reproduced; hardened invariants passed."
+    }
+  ],
+  "verified_invariants": [
+    "anonymous reads return zero rows and anonymous writes lack privileges",
+    "Alice and Bob read only their own tenant",
+    "same-tenant inserts and updates succeed",
+    "cross-tenant inserts and tenant moves fail closed",
+    "cross-tenant updates and deletes affect zero rows",
+    "authorization assertions use anon or authenticated roles",
+    "package, lockfile, and VERSION agree on 1.1.0"
+  ],
+  "not_run": [
+    "hosted Supabase Auth, JWT, PostgREST, Realtime, Storage, or Edge Functions",
+    "production deployment or migration",
+    "load testing at production cardinality",
+    "external penetration test"
+  ]
+}
