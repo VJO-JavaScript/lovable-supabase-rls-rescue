@@ -1,6 +1,6 @@
 # Lovable + Supabase RLS Rescue
 
-[![CI](https://github.com/VJO-JavaScript/lovable-supabase-rls-rescue/actions/workflows/ci.yml/badge.svg)](https://github.com/VJO-JavaScript/lovable-supabase-rls-rescue/actions/workflows/ci.yml)
+[![CI](https://github.com/AppToProduction/lovable-supabase-rls-rescue/actions/workflows/ci.yml/badge.svg)](https://github.com/AppToProduction/lovable-supabase-rls-rescue/actions/workflows/ci.yml)
 
 An executable before/after proof for a multi-tenant Supabase Row Level Security
 (RLS) failure: an authenticated Alpha Company user could read Beta Company's
@@ -15,9 +15,9 @@ their own tenant.
 
 ![Baseline cross-tenant read compared with hardened tenant-isolated reads and writes](assets/social-preview.png)
 
-- [Inspect the preserved vulnerable baseline](https://github.com/VJO-JavaScript/lovable-supabase-rls-rescue/tree/broken-baseline)
-- [Inspect the hardened main branch](https://github.com/VJO-JavaScript/lovable-supabase-rls-rescue/tree/main)
-- [Compare the baseline with v1.1.0](https://github.com/VJO-JavaScript/lovable-supabase-rls-rescue/compare/broken-baseline...v1.1.0)
+- [Inspect the preserved vulnerable baseline](https://github.com/AppToProduction/lovable-supabase-rls-rescue/tree/broken-baseline)
+- [Inspect the hardened main branch](https://github.com/AppToProduction/lovable-supabase-rls-rescue/tree/main)
+- [Compare the baseline with v1.1.0](https://github.com/AppToProduction/lovable-supabase-rls-rescue/compare/broken-baseline...v1.1.0)
 - [Review the finding](docs/audit/baseline-findings.md)
 - [Review the remediation ledger](docs/audit/remediation-ledger.md)
 - [Review rollback and residual risk](docs/operations/rollback-runbook.md)
@@ -55,7 +55,7 @@ flowchart LR
    and [write guard](db/migrations/0003_enforce_tenant_writes.sql).
 3. Review the [read isolation test](test/rescued-tenant-isolation.test.js) and
    [write matrix](test/rescued-write-matrix.test.js).
-4. Check the green [CI evidence](https://github.com/VJO-JavaScript/lovable-supabase-rls-rescue/actions).
+4. Check the green [CI evidence](https://github.com/AppToProduction/lovable-supabase-rls-rescue/actions).
 5. Read the [test-boundary decision](docs/decisions/0001-pglite-test-boundary.md)
    before applying the pattern to hosted Supabase.
 
@@ -162,7 +162,7 @@ acceptance test, preserve a recovery path, and reverify the hosted boundary.
 
 This reference is closest to a Lovable/Supabase application that already has a
 reproducible multi-tenant read leak or an RLS launch blocker. You can open a
-[public fit-check issue](https://github.com/VJO-JavaScript/lovable-supabase-rls-rescue/issues/new?template=fit-check.yml)
+[public fit-check issue](https://github.com/AppToProduction/lovable-supabase-rls-rescue/issues/new?template=fit-check.yml)
 using only redacted, non-sensitive facts.
 
 **GitHub issues are public. Never include secrets, tokens, private repository or
